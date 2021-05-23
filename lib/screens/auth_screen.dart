@@ -71,7 +71,7 @@ class _AuthScreenState extends State<AuthScreen> {
       if (err.message != null) {
         message = err.message;
       }
-      ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+      Scaffold.of(ctx).showSnackBar(SnackBar(
         content: Text(message),
         backgroundColor: Theme.of(context).errorColor,
       ));
@@ -84,10 +84,14 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
-      body: AuthForm(
-        _submitAuthForm,
-        _isLoading,
+      // backgroundColor: Theme.of(context).primaryColor,
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: AuthForm(
+          _submitAuthForm,
+          _isLoading,
+        ),
       ),
     );
   }

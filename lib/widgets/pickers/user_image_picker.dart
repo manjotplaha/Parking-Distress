@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -26,19 +25,26 @@ class _UserImagePickerState extends State<UserImagePicker> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Row(
       children: [
         CircleAvatar(
           radius: 40.0,
           backgroundColor: Colors.grey,
-          backgroundImage:
-              _pickedImage != null ? FileImage(_pickedImage) : null,
+          backgroundImage: _pickedImage != null
+              ? FileImage(_pickedImage)
+              : AssetImage('assets/images/person-default.png'),
         ),
         FlatButton.icon(
             textColor: Theme.of(context).primaryColor,
             onPressed: _pickImage,
             icon: Icon(Icons.image),
-            label: Text('Add Image')),
+            label: Text(
+              'Add Image',
+              style: TextStyle(
+                fontFamily: 'Trueno',
+                fontSize: 12.0,
+              ),
+            )),
       ],
     );
   }
