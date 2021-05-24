@@ -43,10 +43,32 @@ class _AuthFormState extends State<AuthForm> {
     _userImageFile = image;
   }
 
+  //To Validate email
+  String validateEmail(String value) {
+    Pattern pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regex = new RegExp(pattern);
+    if (!regex.hasMatch(value))
+      return 'Enter Valid Email';
+    else
+      return null;
+  }
+
+// To validate Date
+  String validateDate(String value) {
+    Pattern pattern =
+        r'^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$';
+    RegExp regex = new RegExp(pattern);
+    if (!regex.hasMatch(value))
+      return 'Enter Valid Date';
+    else
+      return null;
+  }
+
   void _trySubmit() {
     final isValid = _formKey.currentState
         .validate(); //invoke the validator propertes of form
-    if (_userImageFile == null) {
+    if (!_isLogin) if (_userImageFile == null) {
       Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text('Please pick an image'),
@@ -115,28 +137,24 @@ class _AuthFormState extends State<AuthForm> {
             children: [
               if (!_isLogin) UserImagePicker(_pickedImage),
               TextFormField(
-                key: ValueKey('email'),
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  labelStyle: TextStyle(
-                    fontFamily: 'Trueno',
-                    fontSize: 12.0,
-                    color: Colors.grey.withOpacity(0.5),
+                  key: ValueKey('email'),
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    labelStyle: TextStyle(
+                      fontFamily: 'Trueno',
+                      fontSize: 12.0,
+                      color: Colors.grey.withOpacity(0.5),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.green)),
+                    labelText: 'Email Address',
                   ),
-                  focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.green)),
-                  labelText: 'Email Address',
-                ),
-                onSaved: (value) {
-                  _userEmail = value;
-                },
-                validator: (value) {
-                  if (value.isEmpty || !value.contains('@')) {
-                    return 'Please Enter a valid email address!';
-                  }
-                  return null;
-                },
-              ),
+                  onSaved: (value) {
+                    _userEmail = value;
+                  },
+                  validator: (value) => value.isEmpty
+                      ? 'Email is required'
+                      : validateEmail(value)),
               if (!_isLogin)
                 TextFormField(
                   key: ValueKey('Username'),
@@ -314,31 +332,32 @@ class _AuthFormState extends State<AuthForm> {
                   onSaved: (value) {
                     _userDOB = value;
                   },
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please Enter your DOB';
-                    }
-                    return null;
-                  },
+                  validator: (value) =>
+                      value.isEmpty ? 'DOB is required' : validateDate(value),
                 ),
               SizedBox(height: 12),
               if (widget.isLoading) CircularProgressIndicator(),
-              if (!widget.isLoading) SizedBox(height: 50.0),
-              GestureDetector(
-                onTap: _trySubmit,
-                child: Container(
+              SizedBox(height: 50.0),
+              if (!widget.isLoading)
+                GestureDetector(
+                  onTap: _trySubmit,
+                  child: Container(
                     height: 50.0,
                     child: Material(
-                        borderRadius: BorderRadius.circular(25.0),
-                        shadowColor: Colors.greenAccent,
-                        color: Colors.green,
-                        elevation: 7.0,
-                        child: Center(
-                            child: Text('LOGIN',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: 'Trueno'))))),
-              ),
+                      borderRadius: BorderRadius.circular(25.0),
+                      shadowColor: Colors.greenAccent,
+                      color: Colors.green,
+                      elevation: 7.0,
+                      child: Center(
+                        child: Text(
+                          'LOGIN',
+                          style: TextStyle(
+                              color: Colors.white, fontFamily: 'Trueno'),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               SizedBox(height: 20.0),
               if (!widget.isLoading)
                 GestureDetector(

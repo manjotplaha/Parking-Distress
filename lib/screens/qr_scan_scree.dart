@@ -30,90 +30,7 @@ class _QRScanScreenState extends State<QRScanScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: <Widget>[
-          Expanded(flex: 4, child: _buildQrView(context)),
-          Expanded(
-            flex: 1,
-            child: FittedBox(
-              fit: BoxFit.contain,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  if (result != null)
-                    Text(
-                        'Barcode Type: ${describeEnum(result.format)}   Data: ${result.code}')
-                  else
-                    Text('Scan a code'),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.all(8),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              await controller?.toggleFlash();
-                              setState(() {});
-                            },
-                            child: FutureBuilder(
-                              future: controller?.getFlashStatus(),
-                              builder: (context, snapshot) {
-                                return Text('Flash: ${snapshot.data}');
-                              },
-                            )),
-                      ),
-                      Container(
-                        margin: EdgeInsets.all(8),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              await controller?.flipCamera();
-                              setState(() {});
-                            },
-                            child: FutureBuilder(
-                              future: controller?.getCameraInfo(),
-                              builder: (context, snapshot) {
-                                if (snapshot.data != null) {
-                                  return Text(
-                                      'Camera facing ${describeEnum(snapshot.data)}');
-                                } else {
-                                  return Text('loading');
-                                }
-                              },
-                            )),
-                      )
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.all(8),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await controller?.pauseCamera();
-                          },
-                          child: Text('pause', style: TextStyle(fontSize: 20)),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.all(8),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await controller?.resumeCamera();
-                          },
-                          child: Text('resume', style: TextStyle(fontSize: 20)),
-                        ),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
+      body: Container(child: _buildQrView(context)),
     );
   }
 
@@ -121,20 +38,88 @@ class _QRScanScreenState extends State<QRScanScreen> {
     // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
     var scanArea = (MediaQuery.of(context).size.width < 400 ||
             MediaQuery.of(context).size.height < 400)
-        ? 150.0
-        : 300.0;
+        ? 200.0
+        : 400.0;
     // To ensure the Scanner view is properly sizes after rotation
     // we need to listen for Flutter SizeChanged notification and update controller
-    return QRView(
-      key: qrKey,
-      onQRViewCreated: _onQRViewCreated,
-      overlay: QrScannerOverlayShape(
-          borderColor: Colors.red,
-          borderRadius: 10,
-          borderLength: 30,
-          borderWidth: 10,
-          cutOutSize: scanArea),
-    );
+    return Stack(children: [
+      QRView(
+        key: qrKey,
+        onQRViewCreated: _onQRViewCreated,
+        overlay: QrScannerOverlayShape(
+            borderColor: Colors.red,
+            borderRadius: 10,
+            borderLength: 30,
+            borderWidth: 10,
+            cutOutSize: scanArea),
+      ),
+      Positioned(
+          top: 90,
+          // right: MediaQuery.of(context).size.width / 4,
+          left: MediaQuery.of(context).size.width / 3.3,
+          child: Text(
+            'Scan QR Code',
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          )),
+      Positioned(
+        bottom: 50,
+        right: MediaQuery.of(context).size.width / 7,
+        left: MediaQuery.of(context).size.width / 7,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.grey[400],
+            borderRadius: BorderRadius.circular(10),
+          ),
+          alignment: Alignment.center,
+          height: 70,
+          width: 250,
+          // color: Colors.grey[400],
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              IconButton(
+                icon: Icon(
+                  Icons.flash_on,
+                  size: 30,
+                ),
+                onPressed: () async {
+                  await controller?.toggleFlash();
+                  setState(() {});
+                },
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.flip_camera_ios_outlined,
+                  size: 30,
+                ),
+                onPressed: () async {
+                  await controller?.flipCamera();
+                  setState(() {});
+                },
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.pause,
+                  size: 30,
+                ),
+                onPressed: () async {
+                  await controller?.pauseCamera();
+                },
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.play_arrow_outlined,
+                  size: 30,
+                ),
+                onPressed: () async {
+                  await controller?.resumeCamera();
+                },
+              ),
+            ],
+          ),
+        ),
+      )
+    ]);
   }
 
   void _onQRViewCreated(QRViewController controller) {
@@ -144,10 +129,11 @@ class _QRScanScreenState extends State<QRScanScreen> {
     controller.scannedDataStream.listen((scanData) {
       print(scanData.code);
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (ctx) => ChatScreen(scanData.code)),
-      );
+      if (scanData != null)
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (ctx) => ChatScreen(scanData.code)),
+        );
 
       result = scanData;
     });

@@ -24,14 +24,12 @@ class _ViewSelectorState extends State<ViewSelector> {
       bottomNavigationBar: BottomNavigationBar(
         onTap: _selectPage,
         currentIndex: _selectedPageIndex,
-        backgroundColor: Theme.of(context).primaryColor,
-        selectedItemColor: Colors.green[800],
-        unselectedItemColor: Colors.green[500],
+        backgroundColor: Colors.teal,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white,
         items: [
           BottomNavigationBarItem(
               icon: Icon(Icons.fit_screen), label: 'QR Scanner'),
-          // BottomNavigationBarItem(
-          //     icon: Icon(Icons.message_outlined), label: 'Chats Screen'),
           BottomNavigationBarItem(
               icon: Icon(Icons.qr_code), label: 'User QR Code')
         ],
