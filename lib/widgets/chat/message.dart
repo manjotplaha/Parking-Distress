@@ -23,15 +23,18 @@ class Messages extends StatelessWidget {
             children: [
               Expanded(
                 child: ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
                     reverse: true,
                     itemCount: chatSnapshot.data.docs.length,
                     itemBuilder: (ctx, index) => MessageBubble(
-                          chatDocs[index]['text'],
-                          chatDocs[index]['userName'],
-                          chatDocs[index]['userImage'],
-                          chatDocs[index]['userId'] ==
-                              FirebaseAuth.instance.currentUser.uid,
-                        )),
+                        chatDocs[index]['text'],
+                        chatDocs[index]['userName'],
+                        chatDocs[index]['userImage'],
+                        chatDocs[index]['userId'] ==
+                            FirebaseAuth.instance.currentUser.uid,
+                        chatDocs[index]['recieverId'],
+                        chatDocs[index]['recieverName'],
+                        chatDocs[index]['recieverPhoneNumber'])),
               ),
             ],
           ),

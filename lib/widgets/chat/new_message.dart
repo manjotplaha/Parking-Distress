@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NewMessage extends StatefulWidget {
+  var vehNumber;
+  NewMessage(this.vehNumber);
   @override
   _NewMessageState createState() => _NewMessageState();
 }
@@ -13,18 +15,39 @@ class _NewMessageState extends State<NewMessage> {
   bool _messageSent = false;
   final _controller = new TextEditingController();
   var _eneterdMessage = '';
+  dynamic recieverPhoneNumber;
+  dynamic recieveruserId;
+  dynamic recieveruserName;
+
   void _sendMessage() async {
     FocusScope.of(context).unfocus();
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .where('vehicleNumber', isEqualTo: widget.vehNumber)
+        .get()
+        .then((value) {
+      print(value.docs.map((e) async {
+        recieverPhoneNumber = e.data()['phoneNumber'];
+        recieveruserId = e.data()['userId'];
+        recieveruserName = e.data()['userName'];
+      }));
+    });
+
     final user = FirebaseAuth.instance.currentUser;
     final userData = await FirebaseFirestore.instance
         .collection('users')
         .doc(user.uid)
         .get();
-    FirebaseFirestore.instance.collection('chat').add({
+    print(widget.vehNumber);
+    await FirebaseFirestore.instance.collection('chat').add({
       'text': _eneterdMessage,
       'createdAt': Timestamp.now(),
       'userName': userData['userName'],
       'userId': user.uid,
+      'recieverId': recieveruserId,
+      'recieverPhoneNumber': recieverPhoneNumber,
+      'recieverName': recieveruserName,
       'userImage': userData['image_url'],
       'uservehicleNumber': userData['vehicleNumber'],
       'userPhoneNumber': userData['phoneNumber'],
@@ -138,3 +161,19 @@ class _NewMessageState extends State<NewMessage> {
     );
   }
 }
+
+// FirebaseFirestore.instance
+//     .collection('users')
+//     .where('vehicleNumber', isEqualTo: widget.vehNumber)
+//     .get()
+//     .then((value) {
+//   print(value.docs.map((e) => recieveruserId = e.data()['userId']));
+// });
+
+// FirebaseFirestore.instance
+//     .collection('users')
+//     .where('vehicleNumber', isEqualTo: widget.vehNumber)
+//     .get()
+//     .then((value) {
+//   print(value.docs.map((e) => recieveruserName = e.data()['userName']));
+// });

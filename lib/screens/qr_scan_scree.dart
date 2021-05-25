@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:chat_app/screens/chat_screen.dart';
+import 'package:chat_app/widgets/chat/new_message.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -134,8 +135,10 @@ class _QRScanScreenState extends State<QRScanScreen> {
           context,
           MaterialPageRoute(builder: (ctx) => ChatScreen(scanData.code)),
         );
+      // scanData = null;
 
       result = scanData;
+      controller.stopCamera();
     });
   }
 
@@ -145,3 +148,14 @@ class _QRScanScreenState extends State<QRScanScreen> {
     super.dispose();
   }
 }
+
+// final recieverData = FirebaseFirestore.instance
+//         .collection('users')
+//         .where('vehicleNumber', isEqualTo: widget.vehNumber)
+//         .get()
+//         .then((value) => value.docs.map((e) {
+//               recieverPhoneNumber = e.data()['userPhoneNumber'].toString();
+//               recieverUID = e.data()['userId'].toString();
+//               recieverName = e.data()['userName'].toString();
+//               print(recieverName);
+//             }));

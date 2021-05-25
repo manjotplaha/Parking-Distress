@@ -1,5 +1,6 @@
 import 'package:chat_app/widgets/chat/message.dart';
 import 'package:chat_app/widgets/chat/new_message.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -31,6 +32,11 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var senderAuth = FirebaseAuth.instance.currentUser.uid;
+    var recieverAuth = FirebaseFirestore.instance
+        .collection('users')
+        .where('vehicleNumber', isEqualTo: widget.vehicleNumber)
+        .snapshots();
     return Scaffold(
       appBar: AppBar(
         title: Text('Flutter Chat'),
@@ -60,14 +66,18 @@ class _ChatScreenState extends State<ChatScreen> {
           )
         ],
       ),
-      body: Container(
-          child: Column(
-        children: [
-          Text('You are currently in contact with : ${widget.vehicleNumber}'),
-          Expanded(child: Messages()),
-          Align(alignment: Alignment.bottomRight, child: NewMessage())
-        ],
-      )),
+      body: SingleChildScrollView(
+        child: Container(
+            height: MediaQuery.of(context).size.height - 80,
+            child: Column(
+              children: [
+                Expanded(child: Messages()),
+                Align(
+                    alignment: Alignment.bottomRight,
+                    child: NewMessage(widget.vehicleNumber))
+              ],
+            )),
+      ),
     );
   }
 }
