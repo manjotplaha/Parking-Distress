@@ -18,6 +18,7 @@ class _NewMessageState extends State<NewMessage> {
   dynamic recieverPhoneNumber;
   dynamic recieveruserId;
   dynamic recieveruserName;
+  dynamic recieverVehicleNumber;
 
   void _sendMessage() async {
     FocusScope.of(context).unfocus();
@@ -31,6 +32,7 @@ class _NewMessageState extends State<NewMessage> {
         recieverPhoneNumber = e.data()['phoneNumber'];
         recieveruserId = e.data()['userId'];
         recieveruserName = e.data()['userName'];
+        recieverVehicleNumber = widget.vehNumber;
       }));
     });
 
@@ -48,6 +50,7 @@ class _NewMessageState extends State<NewMessage> {
       'recieverId': recieveruserId,
       'recieverPhoneNumber': recieverPhoneNumber,
       'recieverName': recieveruserName,
+      'recieverVehNumber': recieverVehicleNumber,
       'userImage': userData['image_url'],
       'uservehicleNumber': userData['vehicleNumber'],
       'userPhoneNumber': userData['phoneNumber'],
@@ -79,6 +82,7 @@ class _NewMessageState extends State<NewMessage> {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         FloatingActionButton(
+          backgroundColor: Colors.green,
           onPressed: () {
             launch("tel://21213123123");
           },
@@ -136,17 +140,25 @@ class _NewMessageState extends State<NewMessage> {
             child: (Row(
               children: [
                 Expanded(
-                  child: TextField(
-                    controller: _controller,
-                    decoration: InputDecoration(labelText: 'Send a message...'),
-                    onChanged: (value) {
-                      setState(() {
-                        _eneterdMessage = value;
-                      });
-                    },
+                  child: Container(
+                    // margin: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        borderRadius: BorderRadius.circular(30)),
+                    child: TextField(
+                      controller: _controller,
+                      decoration:
+                          InputDecoration(labelText: '      Send a message...'),
+                      onChanged: (value) {
+                        setState(() {
+                          _eneterdMessage = value;
+                        });
+                      },
+                    ),
                   ),
                 ),
                 IconButton(
+                  color: Colors.black,
                   icon: Icon(Icons.send),
                   onPressed: _eneterdMessage.trim().isEmpty
                       ? null

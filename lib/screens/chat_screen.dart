@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:chat_app/widgets/chat/message.dart';
 import 'package:chat_app/widgets/chat/new_message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,40 +8,51 @@ import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 class ChatScreen extends StatefulWidget {
-  String vehicleNumber;
-  ChatScreen(this.vehicleNumber);
+  String recieverVehicleNumber;
+  String recieverid;
+  String senderId;
+
+  ChatScreen(this.recieverVehicleNumber, this.recieverid, this.senderId);
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  final fbm = FirebaseMessaging();
+
   @override
   void initState() {
-    final fbm = FirebaseMessaging();
+    registerNotification();
+    super.initState();
+  }
+
+  void registerNotification() {
     fbm.requestNotificationPermissions(); //for ios permissions
-    fbm.configure(onMessage: (msg) {
+    fbm.configure(onMessage: (msg) async {
       print(msg);
       return;
-    }, onLaunch: (msg) {
+    }, onLaunch: (msg) async {
       print(msg);
       return;
-    }, onResume: (msg) {
+    }, onResume: (msg) async {
       return;
     });
-    fbm.getToken();
-    super.initState();
+    fbm.getToken().then((token) {
+      print('token $token');
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser.uid)
+          .update({'pushToken': token});
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    var senderAuth = FirebaseAuth.instance.currentUser.uid;
-    var recieverAuth = FirebaseFirestore.instance
-        .collection('users')
-        .where('vehicleNumber', isEqualTo: widget.vehicleNumber)
-        .snapshots();
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Flutter Chat'),
+        backgroundColor: Colors.teal,
+        title: Text(widget.recieverVehicleNumber),
         actions: [
           DropdownButton(
             icon: Icon(Icons.more_vert),
@@ -71,10 +84,12 @@ class _ChatScreenState extends State<ChatScreen> {
             height: MediaQuery.of(context).size.height - 80,
             child: Column(
               children: [
-                Expanded(child: Messages()),
+                Expanded(
+                    child: Messages(widget.recieverVehicleNumber,
+                        widget.recieverid, widget.senderId)),
                 Align(
                     alignment: Alignment.bottomRight,
-                    child: NewMessage(widget.vehicleNumber))
+                    child: NewMessage(widget.recieverVehicleNumber))
               ],
             )),
       ),

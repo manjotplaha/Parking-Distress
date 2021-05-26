@@ -1,7 +1,10 @@
 import 'dart:io';
 
 import 'package:chat_app/screens/chat_screen.dart';
+import 'package:chat_app/widgets/chat/message.dart';
 import 'package:chat_app/widgets/chat/new_message.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -124,18 +127,38 @@ class _QRScanScreenState extends State<QRScanScreen> {
   }
 
   void _onQRViewCreated(QRViewController controller) {
+    dynamic recieveruserId;
+    dynamic recieverPhoneNumber;
+    dynamic recieveruserName;
+    dynamic recieverVehicleNumber;
+    dynamic mapper;
     setState(() {
       this.controller = controller;
     });
-    controller.scannedDataStream.listen((scanData) {
+    controller.scannedDataStream.listen((scanData) async {
       print(scanData.code);
 
+      var senderId = FirebaseAuth.instance.currentUser.uid;
+      await FirebaseFirestore.instance
+          .collection('users')
+          .where('vehicleNumber', isEqualTo: scanData.code.toString())
+          .get()
+          .then((value) {
+        mapper = value.docs.map((e) async {
+          recieverPhoneNumber = e.data()['phoneNumber'];
+          recieveruserId = e.data()['userId'];
+          recieveruserName = e.data()['userName'];
+          recieverVehicleNumber = scanData.code.toString();
+        });
+        print('mapper $mapper');
+      });
       if (scanData != null)
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (ctx) => ChatScreen(scanData.code)),
+          MaterialPageRoute(
+              builder: (ctx) => ChatScreen(
+                  scanData.code.toString(), recieveruserId, senderId)),
         );
-      // scanData = null;
 
       result = scanData;
       controller.stopCamera();

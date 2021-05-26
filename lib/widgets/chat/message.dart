@@ -4,6 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Messages extends StatelessWidget {
+  final String recieverVehicleNumber;
+  final String recieverid;
+  final String senderId;
+
+  Messages(this.recieverVehicleNumber, this.recieverid, this.senderId);
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -17,24 +22,28 @@ class Messages extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         }
-        final chatDocs = chatSnapshot.data.docs;
+        var chatDocs = chatSnapshot.data.docs;
         return Container(
           child: Column(
             children: [
               Expanded(
                 child: ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
+                    // physics: NeverScrollableScrollPhysics(),
                     reverse: true,
                     itemCount: chatSnapshot.data.docs.length,
-                    itemBuilder: (ctx, index) => MessageBubble(
-                        chatDocs[index]['text'],
-                        chatDocs[index]['userName'],
-                        chatDocs[index]['userImage'],
-                        chatDocs[index]['userId'] ==
-                            FirebaseAuth.instance.currentUser.uid,
-                        chatDocs[index]['recieverId'],
-                        chatDocs[index]['recieverName'],
-                        chatDocs[index]['recieverPhoneNumber'])),
+                    itemBuilder: (ctx, index) {
+                      return MessageBubble(
+                          chatDocs[index]['text'],
+                          chatDocs[index]['userName'],
+                          chatDocs[index]['userImage'],
+                          chatDocs[index]['userId'] ==
+                              FirebaseAuth.instance.currentUser.uid,
+                          chatDocs[index]['recieverId'] == recieverid,
+                          chatDocs[index]['recieverName'],
+                          chatDocs[index]['recieverPhoneNumber'],
+                          recieverVehicleNumber,
+                          chatDocs[index]['uservehicleNumber']);
+                    }),
               ),
             ],
           ),

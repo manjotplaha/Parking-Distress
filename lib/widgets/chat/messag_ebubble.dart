@@ -5,19 +5,31 @@ class MessageBubble extends StatelessWidget {
   bool isMe;
   final String userName;
   final String userImage;
-  final String recieverId;
+  bool isReciever;
   final String recieverName;
   final String recieverPhoneNumber;
+  final String recieverVehicleNumber;
+  final String userVehicleNumber;
   final Key key;
 
-  MessageBubble(this.message, this.userName, this.userImage, this.isMe,
-      this.recieverId, this.recieverName, this.recieverPhoneNumber,
+  MessageBubble(
+      this.message,
+      this.userName,
+      this.userImage,
+      this.isMe,
+      this.isReciever,
+      this.recieverName,
+      this.recieverPhoneNumber,
+      this.recieverVehicleNumber,
+      this.userVehicleNumber,
       {this.key});
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
+        // if (isReciever)
         Row(
+          // mainAxisAlignment: if(isMe) {MainAxisAlignment.end} elseif(isReciever){MainAxisAlignment.start},
           mainAxisAlignment:
               isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
           children: [
@@ -40,7 +52,7 @@ class MessageBubble extends StatelessWidget {
                     isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                 children: [
                   Text(
-                    userName,
+                    isMe ? userVehicleNumber : recieverVehicleNumber,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
@@ -70,3 +82,9 @@ class MessageBubble extends StatelessWidget {
     );
   }
 }
+
+// reciever id
+// userid aka sender id
+
+// if currenruserId == senderId  , reciverId == reciever id=> is Me true
+//if userid == recieverid, reciever id == senderId ==> isMe
