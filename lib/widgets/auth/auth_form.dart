@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:chat_app/widgets/pickers/user_image_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class AuthForm extends StatefulWidget {
@@ -63,6 +64,47 @@ class _AuthFormState extends State<AuthForm> {
       return 'Enter Valid Date';
     else
       return null;
+  }
+
+  validateVehicleNumber(String value) async {
+    dynamic recieveruserId;
+    dynamic recieverPhoneNumber;
+    dynamic recieveruserName;
+    dynamic recieverVehicleNumber;
+    dynamic recieverVehName;
+    Iterable mapper;
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .where('vehicleNumber', isEqualTo: value.toString())
+        .get()
+        .then((value) {
+      mapper = value.docs.map((e) async {
+        recieverPhoneNumber = e.data()['phoneNumber'];
+        recieveruserId = e.data()['userId'];
+        recieveruserName = e.data()['userName'];
+        recieverVehName = e.data()['vehicleModelNumber'];
+        // recieverVehicleNumber = scanData.code.toString();
+
+        if (value.docs.length != 0) {
+          print('error');
+          return 'This Plate Number Already Exists';
+        } else {
+          print('no error');
+          return null;
+        }
+      });
+    });
+
+    print(mapper.first);
+
+    if (mapper.first != null) {
+      print('here');
+      return 'This Plate Number Already Exists'.toString();
+    } else {
+      print('here not');
+      return null;
+    }
   }
 
   void _trySubmit() {
@@ -243,10 +285,9 @@ class _AuthFormState extends State<AuthForm> {
                     _userVehicleNumber = value;
                   },
                   validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please Enter Car\'s Plate Number';
-                    }
-                    return null;
+                    value.isEmpty
+                        ? 'Plate No. is required'
+                        : validateVehicleNumber(value);
                   },
                 ),
               if (!_isLogin)

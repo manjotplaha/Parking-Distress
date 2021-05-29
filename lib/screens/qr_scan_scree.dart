@@ -2,11 +2,8 @@ import 'dart:io';
 
 import 'package:chat_app/screens/chat_screen.dart';
 import 'package:chat_app/screens/invalid_screen.dart';
-import 'package:chat_app/widgets/chat/message.dart';
-import 'package:chat_app/widgets/chat/new_message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
@@ -161,7 +158,7 @@ class _QRScanScreenState extends State<QRScanScreen> {
               builder: (ctx) => ChatScreen(scanData.code.toString(),
                   recieveruserId, senderId, recieverVehName)),
         );
-      else if (scanData != null && mapper.first != null) {
+      else if (scanData != null && mapper.first == null) {
         Navigator.push(
             context, MaterialPageRoute(builder: (ctx) => InvalidQR()));
       }
@@ -177,14 +174,3 @@ class _QRScanScreenState extends State<QRScanScreen> {
     super.dispose();
   }
 }
-
-// final recieverData = FirebaseFirestore.instance
-//         .collection('users')
-//         .where('vehicleNumber', isEqualTo: widget.vehNumber)
-//         .get()
-//         .then((value) => value.docs.map((e) {
-//               recieverPhoneNumber = e.data()['userPhoneNumber'].toString();
-//               recieverUID = e.data()['userId'].toString();
-//               recieverName = e.data()['userName'].toString();
-//               print(recieverName);
-//             }));
