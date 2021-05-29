@@ -28,7 +28,7 @@ class Messages extends StatelessWidget {
             children: [
               Expanded(
                 child: ListView.builder(
-                    // physics: NeverScrollableScrollPhysics(),
+                    physics: NeverScrollableScrollPhysics(),
                     reverse: true,
                     itemCount: chatSnapshot.data.docs.length,
                     itemBuilder: (ctx, index) {
@@ -42,7 +42,8 @@ class Messages extends StatelessWidget {
                           chatDocs[index]['recieverName'],
                           chatDocs[index]['recieverPhoneNumber'],
                           recieverVehicleNumber,
-                          chatDocs[index]['uservehicleNumber']);
+                          chatDocs[index]['uservehicleNumber'],
+                          chatDocs[index]['createdAt']);
                     }),
               ),
             ],

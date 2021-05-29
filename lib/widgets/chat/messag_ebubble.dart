@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class MessageBubble extends StatelessWidget {
@@ -10,6 +11,7 @@ class MessageBubble extends StatelessWidget {
   final String recieverPhoneNumber;
   final String recieverVehicleNumber;
   final String userVehicleNumber;
+  final Timestamp createdAt;
   final Key key;
 
   MessageBubble(
@@ -22,21 +24,34 @@ class MessageBubble extends StatelessWidget {
       this.recieverPhoneNumber,
       this.recieverVehicleNumber,
       this.userVehicleNumber,
+      this.createdAt,
       {this.key});
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Row(
+      // mainAxisSize: MainAxisSize.min,
+      // mainAxisAlignment: if(isMe) {MainAxisAlignment.end} elseif(isReciever){MainAxisAlignment.start},
+      mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
-        // if (isReciever)
-        Row(
-          // mainAxisAlignment: if(isMe) {MainAxisAlignment.end} elseif(isReciever){MainAxisAlignment.start},
-          mainAxisAlignment:
-              isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+        Column(
+          crossAxisAlignment:
+              isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
+            Padding(
+              padding: isMe
+                  ? const EdgeInsets.fromLTRB(0, 0, 20, 0)
+                  : const EdgeInsets.fromLTRB(20, 0, 0, 0),
+              child: Text(
+                isMe
+                    ? 'You, ${createdAt.toDate().hour}:${createdAt.toDate().minute}'
+                    : '$recieverVehicleNumber, ${createdAt.toDate().hour}:${createdAt.toDate().minute}',
+                textAlign: TextAlign.end,
+                style: TextStyle(fontWeight: FontWeight.w500),
+              ),
+            ),
             Container(
               decoration: BoxDecoration(
-                  color:
-                      isMe ? Colors.grey[300] : Theme.of(context).accentColor,
+                  color: isMe ? Color(0xffB2B9C5) : Colors.white,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(12),
                     topRight: Radius.circular(12),
@@ -44,47 +59,37 @@ class MessageBubble extends StatelessWidget {
                     bottomRight:
                         isMe ? Radius.circular(0) : Radius.circular(12),
                   )),
-              width: 140,
+              // width: 140,
               padding: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
               margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-              child: Column(
-                crossAxisAlignment:
-                    isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    isMe ? userVehicleNumber : recieverVehicleNumber,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    message,
-                    style: TextStyle(
-                        color: isMe
-                            ? Colors.black
-                            : Theme.of(context)
-                                .accentTextTheme
-                                .bodyText1
-                                .color),
-                  ),
-                ],
+              child: Container(
+                constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width * 2 / 3),
+                child: Column(
+                  crossAxisAlignment:
+                      isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      message,
+                      style: TextStyle(
+                          color: isMe
+                              ? Theme.of(context)
+                                  .accentTextTheme
+                                  .bodyText1
+                                  .color
+                              : Colors.black),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
         ),
-        Positioned(
-            top: -10,
-            left: isMe ? null : 120,
-            right: isMe ? 120 : null,
-            child: CircleAvatar(
-              backgroundImage: NetworkImage(userImage),
-            )),
       ],
-      overflow: Overflow.visible,
     );
   }
 }
-
-// reciever id
-// userid aka sender id
-
-// if currenruserId == senderId  , reciverId == reciever id=> is Me true
-//if userid == recieverid, reciever id == senderId ==> isMe
+// Text(
+//                   isMe ? 'You' : recieverVehicleNumber,
+//                   style: TextStyle(fontWeight: FontWeight.bold),
+//                 ),

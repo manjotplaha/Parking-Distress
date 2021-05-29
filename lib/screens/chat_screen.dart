@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:chat_app/screens/auth_screen.dart';
 import 'package:chat_app/widgets/chat/message.dart';
 import 'package:chat_app/widgets/chat/new_message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,8 +12,10 @@ class ChatScreen extends StatefulWidget {
   String recieverVehicleNumber;
   String recieverid;
   String senderId;
+  String recieverVehName;
 
-  ChatScreen(this.recieverVehicleNumber, this.recieverid, this.senderId);
+  ChatScreen(this.recieverVehicleNumber, this.recieverid, this.senderId,
+      this.recieverVehName);
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
@@ -37,6 +40,9 @@ class _ChatScreenState extends State<ChatScreen> {
     }, onResume: (msg) async {
       return;
     });
+    fbm.requestNotificationPermissions(const IosNotificationSettings(
+        sound: true, badge: true, alert: true, provisional: true));
+
     fbm.getToken().then((token) {
       print('token $token');
       FirebaseFirestore.instance
@@ -49,49 +55,36 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xFFEDF0F4),
       appBar: AppBar(
         backgroundColor: Colors.teal,
-        title: Text(widget.recieverVehicleNumber),
+        title: Text(
+            '${widget.recieverVehicleNumber} || ${widget.recieverVehName}'),
         actions: [
-          DropdownButton(
-            icon: Icon(Icons.more_vert),
-            focusColor: Theme.of(context).primaryIconTheme.color,
-            items: [
-              DropdownMenuItem(
-                child: Container(
-                  child: Row(
-                    children: [
-                      Icon(Icons.exit_to_app),
-                      SizedBox(width: 8),
-                      Text('Logout')
-                    ],
-                  ),
-                ),
-                value: 'logout',
-              )
-            ],
-            onChanged: (itemIdentifier) {
-              if (itemIdentifier == 'logout') {
+          IconButton(
+              onPressed: () {
                 FirebaseAuth.instance.signOut();
-              }
-            },
-          )
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (ctx) => AuthScreen()));
+              },
+              icon: Icon(Icons.logout)),
         ],
       ),
       body: SingleChildScrollView(
-        child: Container(
-            height: MediaQuery.of(context).size.height - 80,
-            child: Column(
-              children: [
-                Expanded(
-                    child: Messages(widget.recieverVehicleNumber,
-                        widget.recieverid, widget.senderId)),
-                Align(
-                    alignment: Alignment.bottomRight,
-                    child: NewMessage(widget.recieverVehicleNumber))
-              ],
-            )),
+        // physics: NeverScrollableScrollPhysics(),
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height - 80,
+          child: Column(
+            children: [
+              Expanded(
+                  child: Messages(widget.recieverVehicleNumber,
+                      widget.recieverid, widget.senderId)),
+              Align(
+                  alignment: Alignment.bottomRight,
+                  child: NewMessage(widget.recieverVehicleNumber))
+            ],
+          ),
+        ),
       ),
     );
   }

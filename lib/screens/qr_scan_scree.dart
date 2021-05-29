@@ -1,13 +1,13 @@
 import 'dart:io';
 
 import 'package:chat_app/screens/chat_screen.dart';
+import 'package:chat_app/screens/invalid_screen.dart';
 import 'package:chat_app/widgets/chat/message.dart';
 import 'package:chat_app/widgets/chat/new_message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QRScanScreen extends StatefulWidget {
@@ -131,7 +131,8 @@ class _QRScanScreenState extends State<QRScanScreen> {
     dynamic recieverPhoneNumber;
     dynamic recieveruserName;
     dynamic recieverVehicleNumber;
-    dynamic mapper;
+    dynamic recieverVehName;
+    Iterable mapper;
     setState(() {
       this.controller = controller;
     });
@@ -148,17 +149,22 @@ class _QRScanScreenState extends State<QRScanScreen> {
           recieverPhoneNumber = e.data()['phoneNumber'];
           recieveruserId = e.data()['userId'];
           recieveruserName = e.data()['userName'];
+          recieverVehName = e.data()['vehicleModelNumber'];
           recieverVehicleNumber = scanData.code.toString();
         });
-        print('mapper $mapper');
+        print('mapper $recieverVehName');
       });
-      if (scanData != null)
+      if (scanData != null && mapper.first != null)
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (ctx) => ChatScreen(
-                  scanData.code.toString(), recieveruserId, senderId)),
+              builder: (ctx) => ChatScreen(scanData.code.toString(),
+                  recieveruserId, senderId, recieverVehName)),
         );
+      else if (scanData != null && mapper.first != null) {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (ctx) => InvalidQR()));
+      }
 
       result = scanData;
       controller.stopCamera();

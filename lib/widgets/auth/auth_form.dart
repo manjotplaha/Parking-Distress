@@ -49,7 +49,7 @@ class _AuthFormState extends State<AuthForm> {
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regex = new RegExp(pattern);
     if (!regex.hasMatch(value))
-      return 'Enter Valid Email';
+      return 'Email should have @ and .';
     else
       return null;
   }
@@ -112,16 +112,16 @@ class _AuthFormState extends State<AuthForm> {
             width: 200.0,
             child: Stack(
               children: [
-                Text('Hello',
-                    style: TextStyle(fontFamily: 'Trueno', fontSize: 60.0)),
+                Text('Parking',
+                    style: TextStyle(fontFamily: 'Trueno', fontSize: 50.0)),
                 Positioned(
                     top: 50.0,
-                    child: Text('There',
+                    child: Text('Distress',
                         style:
                             TextStyle(fontFamily: 'Trueno', fontSize: 60.0))),
                 Positioned(
                     top: 97.0,
-                    left: 175.0,
+                    left: 235.0,
                     child: Container(
                         height: 10.0,
                         width: 10.0,
@@ -145,6 +145,7 @@ class _AuthFormState extends State<AuthForm> {
                       fontSize: 12.0,
                       color: Colors.grey.withOpacity(0.5),
                     ),
+                    hintText: 'example@example.com',
                     focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.green)),
                     labelText: 'Email Address',
@@ -210,6 +211,7 @@ class _AuthFormState extends State<AuthForm> {
                       fontSize: 12.0,
                       color: Colors.grey.withOpacity(0.5),
                     ),
+                    hintText: 'SUV/Saloon/HatchBack/Two-wheeler',
                     focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.green)),
                     labelText: 'Vehicle Type',
@@ -279,6 +281,7 @@ class _AuthFormState extends State<AuthForm> {
                       fontSize: 12.0,
                       color: Colors.grey.withOpacity(0.5),
                     ),
+                    hintText: 'Innova/Esteem/Activa',
                     focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.green)),
                     labelText: 'Vehicle Model',
@@ -325,6 +328,7 @@ class _AuthFormState extends State<AuthForm> {
                       fontSize: 12.0,
                       color: Colors.grey.withOpacity(0.5),
                     ),
+                    hintText: 'DD-MM-YYYY',
                     focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.green)),
                     labelText: 'DOB',
@@ -350,7 +354,7 @@ class _AuthFormState extends State<AuthForm> {
                       elevation: 7.0,
                       child: Center(
                         child: Text(
-                          'LOGIN',
+                          _isLogin ? 'LOGIN' : 'SIGN UP',
                           style: TextStyle(
                               color: Colors.white, fontFamily: 'Trueno'),
                         ),

@@ -141,9 +141,9 @@ class _NewMessageState extends State<NewMessage> {
               children: [
                 Expanded(
                   child: Container(
-                    // margin: EdgeInsets.all(5),
+                    margin: EdgeInsets.only(left: 10),
                     decoration: BoxDecoration(
-                        color: Colors.grey[200],
+                        color: Colors.grey[300],
                         borderRadius: BorderRadius.circular(30)),
                     child: TextField(
                       controller: _controller,
@@ -158,7 +158,7 @@ class _NewMessageState extends State<NewMessage> {
                   ),
                 ),
                 IconButton(
-                  color: Colors.black,
+                  color: Colors.green[600],
                   icon: Icon(Icons.send),
                   onPressed: _eneterdMessage.trim().isEmpty
                       ? null

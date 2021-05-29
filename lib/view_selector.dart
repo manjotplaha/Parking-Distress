@@ -1,4 +1,3 @@
-import 'package:chat_app/screens/chat_screen.dart';
 import 'package:chat_app/screens/qr_scan_scree.dart';
 import 'package:chat_app/screens/user_qr_screen.dart';
 import 'package:flutter/material.dart';
