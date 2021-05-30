@@ -123,7 +123,7 @@ class _QRScanScreenState extends State<QRScanScreen> {
     ]);
   }
 
-  void _onQRViewCreated(QRViewController controller) {
+  Future<void> _onQRViewCreated(QRViewController controller) async {
     dynamic recieveruserId;
     dynamic recieverPhoneNumber;
     dynamic recieveruserName;
@@ -137,34 +137,42 @@ class _QRScanScreenState extends State<QRScanScreen> {
       print(scanData.code);
 
       var senderId = FirebaseAuth.instance.currentUser.uid;
-      await FirebaseFirestore.instance
-          .collection('users')
-          .where('vehicleNumber', isEqualTo: scanData.code.toString())
-          .get()
-          .then((value) {
-        mapper = value.docs.map((e) async {
-          recieverPhoneNumber = e.data()['phoneNumber'];
-          recieveruserId = e.data()['userId'];
-          recieveruserName = e.data()['userName'];
-          recieverVehName = e.data()['vehicleModelNumber'];
-          recieverVehicleNumber = scanData.code.toString();
+      try {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .where('vehicleNumber', isEqualTo: scanData.code.toString())
+            .get()
+            .then((value) {
+          mapper = value.docs.map((e) async {
+            recieverPhoneNumber = e.data()['phoneNumber'];
+            recieveruserId = e.data()['userId'];
+            recieveruserName = e.data()['userName'];
+            recieverVehName = e.data()['vehicleModelNumber'];
+            recieverVehicleNumber = scanData.code.toString();
+          });
+          print('mapper ${mapper.first}');
         });
-        print('mapper $recieverVehName');
-      });
-      if (scanData != null && mapper.first != null)
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (ctx) => ChatScreen(scanData.code.toString(),
-                  recieveruserId, senderId, recieverVehName)),
-        );
-      else if (scanData != null && mapper.first == null) {
+        if (scanData != null) {
+          print('scanData is not null');
+          if (mapper.first != null) {
+            print('Valid QR');
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (ctx) => ChatScreen(scanData.code.toString(),
+                    recieveruserId, senderId, recieverVehName),
+              ),
+            );
+            controller.stopCamera();
+          }
+        }
+      } catch (e) {
+        print(e);
         Navigator.push(
             context, MaterialPageRoute(builder: (ctx) => InvalidQR()));
       }
 
       result = scanData;
-      controller.stopCamera();
     });
   }
 
