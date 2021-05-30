@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 // import 'package:path_provider/path_provider.dart';
 import 'package:chat_app/screens/auth_screen.dart';
+import 'package:chat_app/screens/user_qr_download.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -191,7 +192,10 @@ class _UserQRState extends State<UserQR> {
       ),
       floatingActionButton: FloatingActionButton(
         autofocus: true,
-        onPressed: () => _capturePng(),
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (ctx) => UserQRDownload()));
+        },
         tooltip: 'Save The Or Code',
         child: Icon(Icons.save_alt_outlined),
       ),
@@ -204,6 +208,7 @@ class _UserQRState extends State<UserQR> {
         enableDrag: true,
         context: context,
         builder: (context) => Container(
+            padding: EdgeInsets.all(10),
             margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
             height: MediaQuery.of(context).size.height -
                 (MediaQuery.of(context).size.height / 2),
@@ -258,15 +263,21 @@ class _UserQRState extends State<UserQR> {
                         return null;
                       },
                     ),
-                    GestureDetector(
-                      onTap: _trySubmit,
-                      child: Container(
-                        padding: EdgeInsets.all(15),
-                        decoration: BoxDecoration(
-                            color: Colors.green,
-                            borderRadius: BorderRadius.circular(15)),
-                        child: Text('UPDATE',
-                            style: TextStyle(color: Colors.white)),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: GestureDetector(
+                        onTap: _trySubmit,
+                        child: Container(
+                          padding: EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                              color: Colors.green,
+                              borderRadius: BorderRadius.circular(15)),
+                          child: Text('UPDATE',
+                              style: TextStyle(color: Colors.white)),
+                        ),
                       ),
                     )
                   ],

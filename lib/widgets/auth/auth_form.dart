@@ -270,26 +270,24 @@ class _AuthFormState extends State<AuthForm> {
                 ),
               if (!_isLogin)
                 TextFormField(
-                  key: ValueKey('Plate Number'),
-                  decoration: InputDecoration(
-                    labelStyle: TextStyle(
-                      fontFamily: 'Trueno',
-                      fontSize: 12.0,
-                      color: Colors.grey.withOpacity(0.5),
+                    key: ValueKey('Plate Number'),
+                    decoration: InputDecoration(
+                      labelStyle: TextStyle(
+                        fontFamily: 'Trueno',
+                        fontSize: 12.0,
+                        color: Colors.grey.withOpacity(0.5),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.green)),
+                      labelText: 'Plate Number',
                     ),
-                    focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.green)),
-                    labelText: 'Plate Number',
-                  ),
-                  onSaved: (value) {
-                    _userVehicleNumber = value;
-                  },
-                  validator: (value) {
-                    value.isEmpty
-                        ? 'Plate No. is required'
-                        : validateVehicleNumber(value);
-                  },
-                ),
+                    onSaved: (value) {
+                      _userVehicleNumber = value;
+                    },
+                    validator: (value) =>
+                        value.isEmpty ? 'Plate No. is required' : null
+                    // : validateVehicleNumber(value);
+                    ),
               if (!_isLogin)
                 TextFormField(
                   key: ValueKey('Vehicle RC Number'),
