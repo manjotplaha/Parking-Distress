@@ -143,134 +143,66 @@ class _AuthFormState extends State<AuthForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 25.0, right: 25.0),
-      child: ListView(children: [
-        SizedBox(
-          height: 75.0,
-        ),
-        Container(
-            height: 125.0,
-            width: 200.0,
-            child: Stack(
+    return Card(
+      elevation: 0.0,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 25.0, right: 25.0),
+        child: ListView(children: [
+          SizedBox(
+            height: 75.0,
+          ),
+          Container(
+              height: 125.0,
+              width: 200.0,
+              child: Stack(
+                children: [
+                  Text('Parking',
+                      style: TextStyle(fontFamily: 'Trueno', fontSize: 50.0)),
+                  Positioned(
+                      top: 50.0,
+                      child: Text('Distress',
+                          style:
+                              TextStyle(fontFamily: 'Trueno', fontSize: 60.0))),
+                  Positioned(
+                      top: 97.0,
+                      left: 235.0,
+                      child: Container(
+                          height: 10.0,
+                          width: 10.0,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle, color: Colors.green)))
+                ],
+              )),
+          SizedBox(height: 25.0),
+          Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Parking',
-                    style: TextStyle(fontFamily: 'Trueno', fontSize: 50.0)),
-                Positioned(
-                    top: 50.0,
-                    child: Text('Distress',
-                        style:
-                            TextStyle(fontFamily: 'Trueno', fontSize: 60.0))),
-                Positioned(
-                    top: 97.0,
-                    left: 235.0,
-                    child: Container(
-                        height: 10.0,
-                        width: 10.0,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle, color: Colors.green)))
-              ],
-            )),
-        SizedBox(height: 25.0),
-        Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (!_isLogin) UserImagePicker(_pickedImage),
-              TextFormField(
-                  key: ValueKey('email'),
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
-                    labelStyle: TextStyle(
-                      fontFamily: 'Trueno',
-                      fontSize: 12.0,
-                      color: Colors.grey.withOpacity(0.5),
-                    ),
-                    hintText: 'example@example.com',
-                    focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.green)),
-                    labelText: 'Email Address',
-                  ),
-                  onSaved: (value) {
-                    _userEmail = value;
-                  },
-                  validator: (value) => value.isEmpty
-                      ? 'Email is required'
-                      : validateEmail(value)),
-              if (!_isLogin)
+                if (!_isLogin) UserImagePicker(_pickedImage),
                 TextFormField(
-                  key: ValueKey('Username'),
-                  decoration: InputDecoration(
-                    labelStyle: TextStyle(
-                      fontFamily: 'Trueno',
-                      fontSize: 12.0,
-                      color: Colors.grey.withOpacity(0.5),
+                    key: ValueKey('email'),
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                      labelStyle: TextStyle(
+                        fontFamily: 'Trueno',
+                        fontSize: 12.0,
+                        color: Colors.grey.withOpacity(0.5),
+                      ),
+                      hintText: 'example@example.com',
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.green)),
+                      labelText: 'Email Address',
                     ),
-                    focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.green)),
-                    labelText: 'Username',
-                  ),
-                  onSaved: (value) {
-                    _userName = value;
-                  },
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please Enter a valid username';
-                    }
-                    return null;
-                  },
-                ),
-              TextFormField(
-                key: ValueKey('Password'),
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelStyle: TextStyle(
-                    fontFamily: 'Trueno',
-                    fontSize: 12.0,
-                    color: Colors.grey.withOpacity(0.5),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.green)),
-                  labelText: 'Password',
-                ),
-                onSaved: (value) {
-                  _userPassword = value;
-                },
-                validator: (value) {
-                  if (value.isEmpty || value.length < 7) {
-                    return 'Password must be atleast 7 charcters long.';
-                  }
-                  return null;
-                },
-              ),
-              if (!_isLogin)
-                TextFormField(
-                  key: ValueKey('Vehicle Type'),
-                  decoration: InputDecoration(
-                    labelStyle: TextStyle(
-                      fontFamily: 'Trueno',
-                      fontSize: 12.0,
-                      color: Colors.grey.withOpacity(0.5),
-                    ),
-                    hintText: 'SUV/Saloon/HatchBack/Two-wheeler',
-                    focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.green)),
-                    labelText: 'Vehicle Type',
-                  ),
-                  onSaved: (value) {
-                    _userVehlicleType = value;
-                  },
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please Enter Vehicle Type';
-                    }
-                    return null;
-                  },
-                ),
-              if (!_isLogin)
-                TextFormField(
-                    key: ValueKey('Plate Number'),
+                    onSaved: (value) {
+                      _userEmail = value;
+                    },
+                    validator: (value) => value.isEmpty
+                        ? 'Email is required'
+                        : validateEmail(value)),
+                if (!_isLogin)
+                  TextFormField(
+                    key: ValueKey('Username'),
                     decoration: InputDecoration(
                       labelStyle: TextStyle(
                         fontFamily: 'Trueno',
@@ -279,165 +211,237 @@ class _AuthFormState extends State<AuthForm> {
                       ),
                       focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.green)),
-                      labelText: 'Plate Number',
+                      labelText: 'Username',
                     ),
                     onSaved: (value) {
-                      _userVehicleNumber = value;
+                      _userName = value;
+                    },
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please Enter a valid username';
+                      }
+                      return null;
+                    },
+                  ),
+                TextFormField(
+                  key: ValueKey('Password'),
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelStyle: TextStyle(
+                      fontFamily: 'Trueno',
+                      fontSize: 12.0,
+                      color: Colors.grey.withOpacity(0.5),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.green)),
+                    labelText: 'Password',
+                  ),
+                  onSaved: (value) {
+                    _userPassword = value;
+                  },
+                  validator: (value) {
+                    if (value.isEmpty || value.length < 7) {
+                      return 'Password must be atleast 7 charcters long.';
+                    }
+                    return null;
+                  },
+                ),
+                if (!_isLogin)
+                  TextFormField(
+                    key: ValueKey('Vehicle Type'),
+                    decoration: InputDecoration(
+                      labelStyle: TextStyle(
+                        fontFamily: 'Trueno',
+                        fontSize: 12.0,
+                        color: Colors.grey.withOpacity(0.5),
+                      ),
+                      hintText: 'SUV/Saloon/HatchBack/Two-wheeler',
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.green)),
+                      labelText: 'Vehicle Type',
+                    ),
+                    onSaved: (value) {
+                      _userVehlicleType = value;
+                    },
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please Enter Vehicle Type';
+                      }
+                      return null;
+                    },
+                  ),
+                if (!_isLogin)
+                  TextFormField(
+                      key: ValueKey('Plate Number'),
+                      decoration: InputDecoration(
+                        labelStyle: TextStyle(
+                          fontFamily: 'Trueno',
+                          fontSize: 12.0,
+                          color: Colors.grey.withOpacity(0.5),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.green)),
+                        labelText: 'Plate Number',
+                      ),
+                      onSaved: (value) {
+                        _userVehicleNumber = value;
+                      },
+                      validator: (value) =>
+                          value.isEmpty ? 'Plate No. is required' : null
+                      // : validateVehicleNumber(value);
+                      ),
+                if (!_isLogin)
+                  TextFormField(
+                    key: ValueKey('Vehicle RC Number'),
+                    decoration: InputDecoration(
+                      labelStyle: TextStyle(
+                        fontFamily: 'Trueno',
+                        fontSize: 12.0,
+                        color: Colors.grey.withOpacity(0.5),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.green)),
+                      labelText: 'Vehicle RC Number',
+                    ),
+                    onSaved: (value) {
+                      _userVehicleRcNumber = value;
+                    },
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please Enter Car\'s RC Number';
+                      }
+                      return null;
+                    },
+                  ),
+                if (!_isLogin)
+                  TextFormField(
+                    key: ValueKey('Vehicle Model'),
+                    decoration: InputDecoration(
+                      labelStyle: TextStyle(
+                        fontFamily: 'Trueno',
+                        fontSize: 12.0,
+                        color: Colors.grey.withOpacity(0.5),
+                      ),
+                      hintText: 'Innova/Esteem/Activa',
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.green)),
+                      labelText: 'Vehicle Model',
+                    ),
+                    onSaved: (value) {
+                      _userVehicleModel = value;
+                    },
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please Enter your Vehicle Model';
+                      }
+                      return null;
+                    },
+                  ),
+                if (!_isLogin)
+                  TextFormField(
+                    key: ValueKey('Phone Number'),
+                    decoration: InputDecoration(
+                      labelStyle: TextStyle(
+                        fontFamily: 'Trueno',
+                        fontSize: 12.0,
+                        color: Colors.grey.withOpacity(0.5),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.green)),
+                      labelText: 'Phone Number',
+                    ),
+                    onSaved: (value) {
+                      _userPhoneNumber = value;
+                    },
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please Enter your Phone Number';
+                      }
+                      return null;
+                    },
+                  ),
+                if (!_isLogin)
+                  TextFormField(
+                    key: ValueKey('DOB'),
+                    decoration: InputDecoration(
+                      labelStyle: TextStyle(
+                        fontFamily: 'Trueno',
+                        fontSize: 12.0,
+                        color: Colors.grey.withOpacity(0.5),
+                      ),
+                      hintText: 'DD-MM-YYYY',
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.green)),
+                      labelText: 'DOB',
+                    ),
+                    onSaved: (value) {
+                      _userDOB = value;
                     },
                     validator: (value) =>
-                        value.isEmpty ? 'Plate No. is required' : null
-                    // : validateVehicleNumber(value);
-                    ),
-              if (!_isLogin)
-                TextFormField(
-                  key: ValueKey('Vehicle RC Number'),
-                  decoration: InputDecoration(
-                    labelStyle: TextStyle(
-                      fontFamily: 'Trueno',
-                      fontSize: 12.0,
-                      color: Colors.grey.withOpacity(0.5),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.green)),
-                    labelText: 'Vehicle RC Number',
+                        value.isEmpty ? 'DOB is required' : validateDate(value),
                   ),
-                  onSaved: (value) {
-                    _userVehicleRcNumber = value;
-                  },
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please Enter Car\'s RC Number';
-                    }
-                    return null;
-                  },
-                ),
-              if (!_isLogin)
-                TextFormField(
-                  key: ValueKey('Vehicle Model'),
-                  decoration: InputDecoration(
-                    labelStyle: TextStyle(
-                      fontFamily: 'Trueno',
-                      fontSize: 12.0,
-                      color: Colors.grey.withOpacity(0.5),
-                    ),
-                    hintText: 'Innova/Esteem/Activa',
-                    focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.green)),
-                    labelText: 'Vehicle Model',
-                  ),
-                  onSaved: (value) {
-                    _userVehicleModel = value;
-                  },
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please Enter your Vehicle Model';
-                    }
-                    return null;
-                  },
-                ),
-              if (!_isLogin)
-                TextFormField(
-                  key: ValueKey('Phone Number'),
-                  decoration: InputDecoration(
-                    labelStyle: TextStyle(
-                      fontFamily: 'Trueno',
-                      fontSize: 12.0,
-                      color: Colors.grey.withOpacity(0.5),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.green)),
-                    labelText: 'Phone Number',
-                  ),
-                  onSaved: (value) {
-                    _userPhoneNumber = value;
-                  },
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please Enter your Phone Number';
-                    }
-                    return null;
-                  },
-                ),
-              if (!_isLogin)
-                TextFormField(
-                  key: ValueKey('DOB'),
-                  decoration: InputDecoration(
-                    labelStyle: TextStyle(
-                      fontFamily: 'Trueno',
-                      fontSize: 12.0,
-                      color: Colors.grey.withOpacity(0.5),
-                    ),
-                    hintText: 'DD-MM-YYYY',
-                    focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.green)),
-                    labelText: 'DOB',
-                  ),
-                  onSaved: (value) {
-                    _userDOB = value;
-                  },
-                  validator: (value) =>
-                      value.isEmpty ? 'DOB is required' : validateDate(value),
-                ),
-              SizedBox(height: 12),
-              if (widget.isLoading) CircularProgressIndicator(),
-              SizedBox(height: 50.0),
-              if (!widget.isLoading)
-                GestureDetector(
-                  onTap: _trySubmit,
-                  child: Container(
-                    height: 50.0,
-                    child: Material(
-                      borderRadius: BorderRadius.circular(25.0),
-                      shadowColor: Colors.greenAccent,
-                      color: Colors.green,
-                      elevation: 7.0,
-                      child: Center(
-                        child: Text(
-                          _isLogin ? 'LOGIN' : 'SIGN UP',
-                          style: TextStyle(
-                              color: Colors.white, fontFamily: 'Trueno'),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              SizedBox(height: 20.0),
-              if (!widget.isLoading)
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _isLogin = !_isLogin;
-                    });
-                  },
-                  child: Container(
-                    height: 50.0,
-                    color: Colors.transparent,
+                SizedBox(height: 12),
+                if (widget.isLoading) CircularProgressIndicator(),
+                SizedBox(height: 50.0),
+                if (!widget.isLoading)
+                  GestureDetector(
+                    onTap: _trySubmit,
                     child: Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              color: Colors.black,
-                              style: BorderStyle.solid,
-                              width: 1.0),
-                          color: Colors.transparent,
-                          borderRadius: BorderRadius.circular(25.0)),
-                      child: Center(
-                        child: Text(
-                          _isLogin
-                              ? 'Create New Account'
-                              : 'I Already have an account',
-                          style: TextStyle(fontFamily: 'Trueno'),
+                      height: 50.0,
+                      child: Material(
+                        borderRadius: BorderRadius.circular(25.0),
+                        shadowColor: Colors.greenAccent,
+                        color: Colors.green,
+                        elevation: 7.0,
+                        child: Center(
+                          child: Text(
+                            _isLogin ? 'LOGIN' : 'SIGN UP',
+                            style: TextStyle(
+                                color: Colors.white, fontFamily: 'Trueno'),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              SizedBox(
-                height: 20,
-              )
-            ],
+                SizedBox(height: 20.0),
+                if (!widget.isLoading)
+                  GestureDetector(
+                    key: ValueKey('authSwitch'),
+                    onTap: () {
+                      setState(() {
+                        _isLogin = !_isLogin;
+                      });
+                    },
+                    child: Container(
+                      height: 50.0,
+                      color: Colors.transparent,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                color: Colors.black,
+                                style: BorderStyle.solid,
+                                width: 1.0),
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.circular(25.0)),
+                        child: Center(
+                          child: Text(
+                            _isLogin
+                                ? 'Create New Account'
+                                : 'I Already have an account',
+                            style: TextStyle(fontFamily: 'Trueno'),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                SizedBox(
+                  height: 20,
+                )
+              ],
+            ),
           ),
-        ),
-      ]),
+        ]),
+      ),
     );
   }
 }
