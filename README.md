@@ -1,6 +1,6 @@
 # Parking Distress
 
-A new Flutter project.
+An application devised to provide a medium of communication for people stuck in parking spaces to get in touch with the owner of the blocking vehicle by the implementation of QR Codes.
 
 ## Getting Started
 
